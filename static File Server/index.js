@@ -7,9 +7,7 @@ const server = http.createServer((req, res) => {
     try {
         console.log("URL ====> ", req.url);
 
-        const files = fs.readdirSync(__dirname + "/public", (err) => {
-            console.log("files ==> ", err);
-        })
+        const files = fs.readdirSync(__dirname + "/public");
         console.log("My files ==> ", files); // Current Folder
 
         const newUrl = req.url.slice(1);
@@ -19,18 +17,14 @@ const server = http.createServer((req, res) => {
 
             if (req.method == "GET" && req.url == `/${files[index]}`) {
                 let currentFolder = __dirname + "/public" + `/${files[index]}`;
-                let context = fs.readFileSync(currentFolder, "utf-8", (err) => {
-                    console.log("Context Error ==> " + err);
-                })
+                let context = fs.readFileSync(currentFolder, "utf-8");
                 res.end(context);
             }
         } else {
-            req.url = "/";
+            req.url = "/404";
 
             if (req.method == "GET" && req.url == "/") {
-                let context = fs.readdirSync(`${__dirname}/public`, "utf-8", (err) => {
-                    console.log("__dirname error ", err)
-                })
+                let context = fs.readdirSync(`${__dirname}/public`, "utf-8");
                 res.end(context.join(' '));
             }
         }
