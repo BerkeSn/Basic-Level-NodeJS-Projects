@@ -19,7 +19,7 @@ async function myFunction(pathh) {
             if (isDirectory) {
                 folder++
                 console.log(stats.mtime);
-                console.log("-------------YUKARISI STATS----------------")
+                console.log("-------------YUKARISI STATS-----------------")
             } else {
                 sumSize = sumSize + stats.size
                 file++;
