@@ -19,7 +19,7 @@ async function myFunction(pathh) {
             if (isDirectory) {
                 folder++
                 console.log(stats.mtime);
-                console.log("-------------YUKARISI STATS-----------------")
+                console.log("-------------YUKARISI STATS----------------")
             } else {
                 sumSize = sumSize + stats.size
                 file++;
@@ -34,7 +34,6 @@ async function myFunction(pathh) {
 
         const top3 = fileList.sort((a, b) => b.size - a.size).slice(0, 3);
 
-        // console.log("---------------------------------------------------------")
         console.log("Folder number==> ", folder);
         console.log("File number==> ", file);
         console.log("Folder size==> ", sumSize);

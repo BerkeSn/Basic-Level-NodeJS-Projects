@@ -43,6 +43,6 @@ Node.js dahili `fs/promises` ve `path` modülleri kullanılarak geliştirilmiş,
 
 ```text
 .
-├── index.js      # Dizin analiz mantığının bulunduğu kaynak kodlar
+├── index.js      # Dizin analiz mantığının bulunduğu kaynak kod
 
 ```
