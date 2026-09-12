@@ -1,19 +1,19 @@
-const {readdir} = require('node:fs/promises');
+const { readdir } = require('node:fs/promises');
 const path = require('node:path');
 
 const inputPath = process.argv[2];
 const folderPath = inputPath ? path.resolve(inputPath) : process.cwd();
 
-let entries; 
+let entries;
 
 async function main() {
-    try{
+    try {
         entries = await readdir(folderPath, { withFileTypes: true });
-    }catch{
+    } catch {
         console.error(`error: could not read folder: ${inputPath || folderPath}`);
     }
 
-    if(entries) {
+    if (entries) {
         const fileCount = entries.filter((entry) => entry.isFile()).length;
         const folderCount = entries.filter((entry) => entry.isDirectory()).length;
 
