@@ -25,39 +25,3 @@ A lightweight Node.js command-line interface (CLI) tool that reads a JSON file, 
 Create the following files in your project directory:
 
 ### 1. `json-formatter.js`
-
-```javascript
-const fs = require('node:fs/promises');
-
-const filePath = process.argv[2];
-
-async function formatJson(file) {
-  // 1. Check if argument is provided
-  if (!file) {
-    console.error('error: please provide a JSON file path');
-    process.exit(1);
-  }
-
-  try {
-    // 2. Read file content
-    const fileContent = await fs.readFile(file, 'utf-8');
-
-    // 3. Parse and format JSON
-    const parsedData = JSON.parse(fileContent);
-    const formattedJson = JSON.stringify(parsedData, null, 2);
-
-    console.log(formattedJson);
-  } catch (err) {
-    // 4. Differentiate error types
-    if (err.code === 'ENOENT') {
-      console.error(`error: could not read file: ${file}`);
-    } else if (err instanceof SyntaxError) {
-      console.error(`error: invalid JSON in file: ${file}`);
-    } else {
-      console.error(`error: could not read file: ${file}`);
-    }
-    process.exit(1);
-  }
-}
-
-formatJson(filePath);
