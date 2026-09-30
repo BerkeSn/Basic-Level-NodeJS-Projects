@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unit Converter</title>
+</head>
+<body>
+        <div>Unit Converter</div>
+        <form method="POST" action="parametre">
+            <div class="type">
+                <span><a href="/convertLength">Length</a></span>
+                <span><a href="/convertWeight">Weight</a></span>
+                <span><a href="/convertTempature">Tempature</a></span>
+            </div>
+            <div>
+                <div>
+                    <label for="input">Input</label> <br>
+                    <input type="number" name="input" id="input">
+                </div>
+                <div>
+                    <label for="convertFrom">Convert From</label> <br>
+                    <select name="convertFrom" id="ConvertFrom">
+                        <!--OPTIONS-->
+                    </select>
+                </div>
+                <div>
+                    <label for="convertTo">Convert To</label> <br>
+                    <select name="convertTo" id="ConvertTo">
+                        <!--OPTIONS-->
+                    </select>
+                </div>
+            </div>
+            <div>
+                <button type="submit">Convert</button>
+                <button type="reset">Reset</button>
+            </div> 
+        </form>
+</body>
+</html>
