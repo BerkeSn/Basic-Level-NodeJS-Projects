@@ -1,0 +1,18 @@
+[
+  {
+    "id": "01a11688-8cd0-78f3-ab1d-b5117118cc22",
+    "name": "Chest Press",
+    "category": "push",
+    "sets": 1,
+    "reps": 1,
+    "weight": 20
+  },
+  {
+    "id": "01a11690-1bb8-787e-b0ea-2b419f02e7c2",
+    "name": "Barbell Row",
+    "category": "pull",
+    "sets": 1,
+    "reps": 1,
+    "weight": 10
+  }
+]
