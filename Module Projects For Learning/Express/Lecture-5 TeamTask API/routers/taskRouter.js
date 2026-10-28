@@ -4,7 +4,7 @@ const middleware = require('../middleware/middleware');
 const controller = require('../controllers/taskController');
 
 router.post(
-    '/createTask',
+    '/createTask/:id',
     middleware.verifyToken,
     controller.createTask
 )
@@ -15,10 +15,16 @@ router.get(
     controller.getTasksForTeams
 )
 
-router.get(
-    '/getTasks',
+router.put(
+    '/updateTask/:teamId/:taskId',
     middleware.verifyToken,
-    controller.getTasks
+    controller.updateTask
+)
+
+router.delete(
+    '/deleteTask/:teamId/:taskId',
+    middleware.verifyToken,
+    controller.deleteTask
 )
 
 module.exports = router;

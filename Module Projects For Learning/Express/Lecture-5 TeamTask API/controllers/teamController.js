@@ -224,7 +224,7 @@ module.exports = {
             if (!deletedUser) {
                 return res.status(404).json({
                     success: false,
-                    message: "User not found in this team"
+                    message: "You are not in this team"
                 })
             }
 

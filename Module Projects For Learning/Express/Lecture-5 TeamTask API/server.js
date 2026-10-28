@@ -1,4 +1,6 @@
-require('dotenv').config()
+require('dotenv').config();
+const helmet = require('helmet');
+const cors = require('cors');
 const express = require('express');
 const db = require('./models');
 const cookieParser = require('cookie-parser');
@@ -17,12 +19,14 @@ const taskRouter = require('./routers/taskRouter');
 app.use(express.json()); // Body'i okuyabilmek için
 app.use(express.urlencoded({ extended: true })); // URL'ler için
 app.use(cookieParser()); // Cookie'leri okuyabilmek için
-app.use(rateLimit);
+app.use(helmet()); // Güvenlik açıklarına karşı koruma
+app.use(cors()); // Farklı tarayıcılara karşı engellemeyi kaldırır.
 
 //Routers
+app.use(rateLimit);
 app.use("/api/user", userRouter);
+app.use('/api/team/task', taskRouter);
 app.use('/api/team', teamRouter);
-app.use('/api/task', taskRouter);
 
 // Middleware
 app.use(middleware.pageNotFound);

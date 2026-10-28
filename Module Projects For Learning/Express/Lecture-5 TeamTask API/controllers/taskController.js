@@ -3,44 +3,64 @@ const db = require('../models');
 module.exports = {
     async createTask(req, res, next) {
         try {
-            const { id } = req.user;
-            const { title, description, status, assignedToId } = req.body;
+            const userId = req.user.id;
+            const teamId = req.params.id;
+            const { title, description, status, dueDate, assignedToId } = req.body;
 
-            if (!title || !description || !status || !assignedToId) {
+            const teamMember = await db.teamMember.findOne({
+                where: {
+                    teamId,
+                    userId
+                }
+            })
+
+            if (!title || !description || !status || !dueDate || !assignedToId) {
                 return res.status(400).json({
                     success: false,
                     message: "Please input all the areas"
                 })
             }
 
-            const assignedUser = await db.User.findByPk(assignedToId);
-
-            if (!assignedUser) {
+            if (!teamMember) {
                 return res.status(404).json({
                     success: false,
-                    message: "AssignedId not exits"
+                    message: "You are not in the team"
                 })
             }
 
-            const task = await db.Task.create({
+            const assignUser = await db.teamMember.findOne({
+                where: {
+                    userId: assignedToId,
+                    teamId
+                }
+            })
+
+            if (!assignUser) {
+                return res.status(404).json({
+                    success: false,
+                    message: "Assigned user not found"
+                })
+            }
+
+            const newTask = await db.Task.create({
                 title,
                 description,
                 status,
-                createdById: id,
+                dueDate,
+                createdById: userId,
+                teamId,
                 assignedToId
             })
 
             return res.status(200).json({
                 success: true,
-                data: task
+                data: newTask
             })
-
         } catch (error) {
             console.error(`createTask error ==> ${error}`);
             next(error);
         }
     },
-    // Takıma ait tüm görevler (Yollayan kişinin takımdan olup olmadığını kontrol etmek gerekiyor.)(user role göre içerik çekebilmeyi middleware haline getirmem gerek)
     async getTasksForTeams(req, res, next) {
         try {
             const teamId = req.params.id;
@@ -72,17 +92,136 @@ module.exports = {
             next(error);
         }
     },
-    // Tüm görevler
-    async getTasks(req, res, next) {
+    async updateTask(req, res, next) {
         try {
-            const task = await db.Task.findAll();
+            const taskId = req.params.taskId;
+            const teamId = req.params.teamId;
+            const userId = req.user.id;
+            const { title, description, status, dueDate, assignedToId } = req.body;
+
+
+            if (!title || !description || !status || !dueDate) {
+                return res.status(400).json({
+                    success: false,
+                    message: "Please input all the areas"
+                })
+            }
+
+            // Kullanıcının takımın üyesi olup olmadığını kontrol ediyorum.
+            const isMember = await db.teamMember.findOne({
+                where: {
+                    teamId,
+                    userId
+                }
+            })
+
+            if (!isMember) {
+                return res.status(403).json({
+                    success: false,
+                    message: "You are not member of this team"
+                })
+            }
+
+            const isAssignUserMember = await db.teamMember.findOne({
+                where: {
+                    teamId,
+                    userId: assignedToId
+                }
+            })
+
+            if (!isAssignUserMember) {
+                return res.status(403).json({
+                    success: false,
+                    message: "Assigned user is not a member"
+                })
+            }
+
+            const task = await db.Task.findOne({
+                where: {
+                    teamId,
+                    id: taskId
+                }
+            });
+
+            if (!task) {
+                return res.status(404).json({
+                    success: false,
+                    message: "Task not found"
+                })
+            }
+
+            task.title = title ?? task.title;
+            task.description = description ?? task.description;
+            task.status = status ?? task.status;
+            task.dueDate = dueDate ?? task.dueDate;
+            task.assignedToId = assignedToId ?? task.assignedToId;
+
+            await task.save();
+
             return res.status(200).json({
                 success: true,
+                message: "Task updated",
                 data: task
             })
+
         } catch (error) {
-            next(error)
+            console.error(`updateTask error ==> ${error}`);
+            next(error);
         }
     },
-    // takıma ait belirli bir görev
+    async deleteTask(req, res, next) {
+        try {
+            const taskId = req.params.taskId;
+            const teamId = req.params.teamId;
+            const userId = req.user.id;
+
+            const theTeam = await db.teamMember.findOne({
+                where: {
+                    userId,
+                    teamId
+                }
+            })
+
+            if (!(theTeam.role.toLowerCase() === "admin")) {
+                return res.status(403).json({
+                    success: false,
+                    message: "Not authorized"
+                })
+            }
+
+            if (!theTeam) {
+                return res.status(404).json({
+                    success: false,
+                    message: "Team not found"
+                })
+            }
+
+            const deletedTask = await db.Task.findOne({
+                where: {
+                    id: taskId,
+                    teamId
+                }
+            });
+
+            if (!deletedTask) {
+                return res.status(403).json({
+                    success: false,
+                    message: "Not authorized"
+                })
+            }
+
+            const task = await db.Task.findByPk(taskId);
+
+            await task.destroy();
+
+            return res.status(200).json({
+                success: true,
+                message: "Task deleted successfully"
+            })
+
+        } catch (error) {
+            console.error(`deleteTask error => ${error}`);
+            next(error);
+        }
+    }
 }
