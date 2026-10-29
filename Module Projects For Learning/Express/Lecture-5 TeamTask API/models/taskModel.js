@@ -9,6 +9,9 @@ module.exports = (sequelize, DataTypes) => {
             Task.belongsTo(model.User,
                 { foreignKey: "assignedToId" }
             )
+            Task.hasMany(model.Comment,
+                { foreignKey: "taskId" }
+            )
         }
     }
 

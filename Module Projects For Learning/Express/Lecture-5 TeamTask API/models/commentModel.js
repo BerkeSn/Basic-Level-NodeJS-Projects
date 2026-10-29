@@ -6,6 +6,9 @@ module.exports = (sequelize, DataTypes) => {
             Comment.belongsTo(model.User,
                 { foreignKey: "userId" }
             )
+            Comment.belongsTo(model.Task,
+                { foreignKey: "taskId" }
+            )
         }
     }
 

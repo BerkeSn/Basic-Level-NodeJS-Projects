@@ -14,6 +14,7 @@ const rateLimit = require('./middleware/rateLimit_middleware');
 const userRouter = require('./routers/userRouter');
 const teamRouter = require('./routers/teamRouter');
 const taskRouter = require('./routers/taskRouter');
+const commentRouter = require('./routers/commentRouter');
 
 
 app.use(express.json()); // Body'i okuyabilmek için
@@ -27,6 +28,7 @@ app.use(rateLimit);
 app.use("/api/user", userRouter);
 app.use('/api/team/task', taskRouter);
 app.use('/api/team', teamRouter);
+app.use('/api/comment', commentRouter)
 
 // Middleware
 app.use(middleware.pageNotFound);
